@@ -40,12 +40,4 @@ authRouter.get('/secret', bearerAuth, async (req, res, next) => {
 });
 
 
-
-
-
-
-
-
-
-
 module.exports = authRouter;

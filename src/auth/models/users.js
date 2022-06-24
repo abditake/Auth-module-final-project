@@ -1,7 +1,7 @@
 'use strict';
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { sequelize } = require('.');
+
 
 const SECRET = process.env.SECRET || 'secretstring';
 
@@ -73,3 +73,4 @@ module.exports = (sequelize, DataTypes)=>{
 
   return users;
 }
+
