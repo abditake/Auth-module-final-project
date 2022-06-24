@@ -1,29 +1,35 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-const userSchema = require('./message-board-user');
-const msgBoardSchema = require('./userBoard');
+const  userSchema  = require('./users');
+const userBoardSchema  = require('./userBoard');
 
 
 
 
-const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite::memory' : process.env.DATABASE_URL;
+// const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite::memory' : process.env.DATABASE_URL;
 
-const DATABASE_CONFIG = new Sequelize(DATABASE_URL, {
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
-});
+const DATABASE_URL = process.env.NODE_ENV === 'test'
+  ? 'sqlite::memory'
+  : process.env.DATABASE_URL || 'sqlite:memory'; 
 
-const sequelize = new Sequelize(DATABASE_URL, DATABASE_CONFIG);
+// const DATABASE_CONFIG = new Sequelize(DATABASE_URL, {
+//   dialectOptions: {
+//     ssl: {
+//       require: true,
+//       rejectUnauthorized: false,
+//     },
+//   },
+// });
 
-const msgBoardModel = new msgBoardSchema(sequelize, DataTypes);
+
+const sequelize = new Sequelize(DATABASE_URL, DataTypes);
+
+const userBoardModel = userBoardSchema(sequelize,DataTypes);
+
 
 
 module.exports = {
-  sequelize: db,
+  db: sequelize,
   users: userSchema(sequelize,DataTypes),
-  msgBoardModel,
+  userBoardModel,
 };

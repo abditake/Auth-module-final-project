@@ -73,3 +73,4 @@ module.exports = (sequelize, DataTypes)=>{
 
   return users;
 }
+
