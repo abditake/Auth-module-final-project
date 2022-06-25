@@ -1,4 +1,4 @@
-
+2
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('UserBoard', {
     recipient: {
