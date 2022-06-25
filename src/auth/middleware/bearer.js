@@ -1,6 +1,6 @@
 'use strict';
 
-const { Users } = require('../models');
+const { users } = require('../models/users');
 
 module.exports = async (req, res, next) => {
   if (!req.headers.authorization) {
@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
     try {
       let token = req.headers.authorization.split(' ').pop();
       console.log('bearer auth token ', token);
-      let validUser = await Users.authenticateBearer(token);
+      let validUser = await users.authenticateBearer(token);
       if (validUser){
         req.user = validUser;
         next();
