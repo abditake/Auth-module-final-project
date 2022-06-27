@@ -1,21 +1,18 @@
-2
+'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('UserBoard', {
     recipient: {
       type: DataTypes.STRING,
       allowNull: false ,
     },
-    userId:{
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     sender: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     message: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
   });
 };

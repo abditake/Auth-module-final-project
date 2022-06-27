@@ -1,35 +1,30 @@
+'use strict';
+require('dotenv').config();
+const  userBoard  = require('./userBoard');
+
 const { Sequelize, DataTypes } = require('sequelize');
 
-const  userSchema  = require('./users');
-const userBoardSchema  = require('./userBoard');
 
+const userSchema = require('./users');
 
+const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite::memory' : process.env.DATABASE_URL;
 
+const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+} : {};
 
-// const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite::memory' : process.env.DATABASE_URL;
+const sequelize = new Sequelize(DATABASE_URL, DATABASE_CONFIG);
 
-const DATABASE_URL = process.env.NODE_ENV === 'test'
-  ? 'sqlite::memory'
-  : process.env.DATABASE_URL || 'sqlite:memory'; 
-
-// const DATABASE_CONFIG = new Sequelize(DATABASE_URL, {
-//   dialectOptions: {
-//     ssl: {
-//       require: true,
-//       rejectUnauthorized: false,
-//     },
-//   },
-// });
-
-
-const sequelize = new Sequelize(DATABASE_URL, DataTypes);
-
-const userBoardModel = userBoardSchema(sequelize,DataTypes);
-
+const userBoardModel = userBoard(sequelize, DataTypes);
 
 
 module.exports = {
   db: sequelize,
-  users: userSchema(sequelize,DataTypes),
+  users: userSchema(sequelize, DataTypes),
   userBoardModel,
 };

@@ -1,43 +1,37 @@
 'use strict';
 
-// all resources
-
+// 3rd Party Resources
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 
+// Esoteric Resources
+const errorHandler = require('./error-handlers/500.js');
+const notFound = require('./error-handlers/404.js');
+const authRouter = require('./router/index');
 
-// 
-const authRoutes = require('./auth/routes.js');
-
-
-// express singleton
-
+// Prepare the express app
 const app = express();
 
-// json request stuff
+// App Level MW
+app.use(cors());
+app.use(morgan('dev'));
+
 app.use(express.json());
-
-
-// Process FORM input and add to request body
 app.use(express.urlencoded({ extended: true }));
 
-
-
-const PORT = process.env.PORT || 3002;
-
 // Routes
-app.use(authRoutes);
+app.use(authRouter);
 
+// Catchalls
+app.use(notFound);
+app.use(errorHandler);
 
 module.exports = {
   server: app,
-  start: () => app.listen(PORT, console.log('server running on', PORT)),
+  startup: (port) => {
+    app.listen(port, () => {
+      console.log(`Server Up on ${port}`);
+    });
+  },
 };
-
-
-
-
-
-
-
