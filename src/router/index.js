@@ -7,7 +7,7 @@ const authRouter = express.Router();
 const acl = require('../auth/middleware/acl');
 const basicAuth = require('../auth/middleware/basic');
 const bearerAuth = require('../auth/middleware/bearer.js');
-const { userBoardModel } = require('../auth/models');
+const { userBoardModel ,userStatusModel } = require('../auth/models');
 const {
   handleSignin,
   handleSignup,
@@ -55,6 +55,40 @@ authRouter.delete('/msgBoard/:id', bearerAuth, acl('delete'), async(req, res, ne
   res.status(200).send(deletedMessage);
 });
 
+
+// BEGINING OF STATUS ROUTES
+
+
+authRouter.get('/status', bearerAuth, acl('read'), async (req, res, next) => {
+  let response = await userStatusModel.findAll();
+  res.status(200).send(response);
+});
+
+authRouter.post('/status', bearerAuth, acl('create'), async (req, res, next) => {
+  let userStatus = req.body;
+
+  let response = await userStatusModel.create(userStatus);
+  res.status(200).send(response);
+});
+
+authRouter.put('/status/:id', bearerAuth, acl('update'), async(req, res, next) => {
+  let { id } = req.params;
+
+  await userStatusModel.update(req.body, {where: {id}});
+  let updatedStatus = await userStatusModel.findOne({where: {id}});
+
+  res.status(200).send(updatedStatus);
+});
+
+authRouter.delete('/status/:id', bearerAuth, acl('delete'), async(req, res, next) => {
+  let { id } = req.params;
+
+  let deletedStatus = await userStatusModel.findOne({where: {id}});
+
+  await userStatusModel.destroy({where: {id}});
+
+  res.status(200).send(deletedStatus);
+});
 
 
 module.exports = authRouter;

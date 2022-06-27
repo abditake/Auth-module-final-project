@@ -2,12 +2,16 @@
 'use strict';
 
 // Start up DB Server
-const { db, userBoardModel } = require('./src/auth/models/index.js');
+const { db, userBoardModel,userStatusModel } = require('./src/auth/models/index.js');
 
 const PORT = process.env.PORT || 3002;
 
 db.sync()
   .then(() => {
+    userStatusModel.create({
+      status: 'active',
+      project: 'Website'
+    });
     userBoardModel.create({
       recipient:'New Staff', 
       sender: 'Micheal', 
