@@ -8,7 +8,7 @@ const SECRET = process.env.API_SECRET || 'TEST_SECRET';
 
 const userSchema = (sequelize, DataTypes) => {
   const model = sequelize.define('User', {
-    username: { type: DataTypes.STRING, allowNull: false, unique: false },
+    username: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
     token: {
       type: DataTypes.VIRTUAL,
@@ -18,12 +18,24 @@ const userSchema = (sequelize, DataTypes) => {
       set(payload) {
         return jwt.sign(payload, SECRET,{ expiresIn: 500000 });
       },
+    }, 
+    role: { 
+      type: DataTypes.ENUM,
+      values: ['user', 'writer', 'editor', 'admin'], 
+      defaultValue: 'user', 
     },
-  });
-
-  model.beforeCreate(async (user) => {
-    let hashedPass = await bcrypt.hash(user.password, 10);
-    user.password = hashedPass;
+    capabilities: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        const acl = {
+          user: ['read'],
+          writer: ['read', 'create'],
+          editor: ['read', 'create', 'update'],
+          admin: ['read', 'create', 'update', 'delete'],
+        };
+        return acl[this.role];
+      },
+    },
   });
 
   // Basic AUTH: Validating strings (username, password) 
