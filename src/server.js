@@ -3,11 +3,13 @@
 // all resources
 
 const express = require('express');
-const bcrypt = require('bcrypt');
-const { Users } = require('./models');
-const basicAuth = require('./middleware/basic');
-const bearerAuth = require('./middleware/bearer');
-const acl = require('./middleware/access-control');
+// const cors = require('cors');
+// const morgan = require('morgan');
+
+
+// 
+const authRoutes = require('./auth/routes.js');
+
 
 // express singleton
 
