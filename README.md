@@ -1,36 +1,24 @@
 # LAB - Class 09
 
-[Project: Partner Project - ToDo Manager](https://github.com/abditake/Auth-module-final-project/tree/dev)
+[Project: Partner Project - ToDo Manager](https://github.com/abditake/Auth-module-final-project)
 
 ## Author: Abdinasir Yussuf, Dylan Ulrich
 
-### Problem Domain
+## Problem Domain
 
 Creating a Task Management system that utilizes Role Based Access Controls.
 
-### [](https://github.com/abditake/Auth-module-final-project/tree/dev)Routes
+- [Prod url](https://ay-du-auth-module-project-prod.herokuapp.com/)
+- [GitHub Repo](https://github.com/abditake/Auth-module-final-project)
 
-### [](https://github.com/abditake/Auth-module-final-project/tree/dev)Links and Resources
-
-- [Prod url](https://github.com/abditake/Auth-module-final-project/tree/dev)
-- [GitHub Repo](https://github.com/abditake/Auth-module-final-project/tree/dev)
-
-### [](https://github.com/abditake/Auth-module-final-project/tree/dev)Setup
-
-#### [](https://github.com/abditake/Auth-module-final-project/tree/dev)`.env` requirements
+`.env` requirements
 
 - `PORT` - Port Number
 
-#### [](https://github.com/abditake/Auth-module-final-project/tree/dev)How to initialize/run the application
+### How to initialize/run the application
 
 - `nodemon` to start
 
-- Endpoints:
+### UML
 
-#### [](https://github.com/abditake/Auth-module-final-project/tree/dev)How to use the library
-
-#### [](https://github.com/abditake/Auth-module-final-project/tree/dev)Features / Routes
-
-#### [](https://github.com/abditake/Auth-module-final-project/tree/dev)Tests
-
-#### [](https://github.com/abditake/Auth-module-final-project/tree/dev)UML
+![UML](./img/uml.png)
