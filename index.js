@@ -9,8 +9,9 @@ const PORT = process.env.PORT || 3002;
 db.sync()
   .then(() => {
     userStatusModel.create({
-      status: 'active',
-      project: 'Website'
+      name: 'Kyle',
+      project: 'website',
+      status: 'active'
     });
     userBoardModel.create({
       recipient:'New Staff', 
