@@ -1,76 +1,65 @@
 'use strict';
-const bcrypt = require('bcrypt');
+
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+require('dotenv').config();
 
+const SECRET = process.env.API_SECRET || 'TEST_SECRET';
 
-const SECRET = process.env.SECRET || 'ThisIsMySecret';
-
-
-module.exports = (sequelize, DataTypes)=>{
-  const users = sequelize.define('Users', {
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    role: { 
-      type: DataTypes.ENUM,
-      values: ['user', 'writer', 'editor', 'admin'], 
-      defaultValue: 'user', 
-    },
+const userSchema = (sequelize, DataTypes) => {
+  const model = sequelize.define('User', {
+    username: { type: DataTypes.STRING, allowNull: false, unique: false },
+    password: { type: DataTypes.STRING, allowNull: false },
     token: {
       type: DataTypes.VIRTUAL,
-      get(){ // a method that gets called on read
-        return jwt.sign({username: this.username}, SECRET);
-      }, 
-      set(payload){  // a method that runs when set with "="
-        return jwt.sign(payload, SECRET);
-      }, 
-    },
-    capabilities: {
-      type: DataTypes.VIRTUAL,
       get() {
-        const acl = {
-          user: ['read'],
-          writer: ['read', 'create'],
-          editor: ['read', 'create', 'update'],
-          admin: ['read', 'create', 'update', 'delete'],
-        };
-        return acl[this.role];
+        return jwt.sign({ username: this.username }, SECRET, { expiresIn: 500000 });
+      },
+      set(payload) {
+        return jwt.sign(payload, SECRET,{ expiresIn: 500000 });
       },
     },
   });
 
-  users.authenticateBasic = async function(username, password){
+  model.beforeCreate(async (user) => {
+    let hashedPass = await bcrypt.hash(user.password, 10);
+    user.password = hashedPass;
+  });
+
+  // Basic AUTH: Validating strings (username, password) 
+  model.authenticateBasic = async function (username, password) {
     try {
       const user = await this.findOne({ where: { username } });
-      const valid = await bcrypt.compare(password, user.password);
-      if (valid) {
+      const validUser = await bcrypt.compare(password, user.password);
+      if (validUser) {
         return user;
-      }
-    } catch (e){
+      } 
+    } catch (e) {
       console.error(e);
-      return e;
+      throw new Error('Invalid User');
     }
+
+
   };
 
-  users.authenticateBearer = async function(token){
+  // Bearer AUTH: Validating a token
+  model.authenticateToken = async function (token) {
     try {
-      let payload = jwt.verify(token, SECRET);
-      console.log(payload);
-      const user = await this.findOne({where: { username: payload.username }});
-      if (user){
-        return user;
+      const parsedToken = jwt.verify(token, SECRET);
+      console.log('payload', parsedToken);
+      
+      const user = await this.findOne({ where: { username: parsedToken.username } });
+      
+      console.log('model.authenticateToken', user);
+      if (user) { return user;
       }
+      throw new Error('User Not Found');
     } catch (e) {
       throw new Error(e.message);
     }
   };
 
-  return users;
+  return model;
 };
 
+module.exports = userSchema;
