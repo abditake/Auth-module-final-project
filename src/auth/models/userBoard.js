@@ -1,4 +1,4 @@
-2
+
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('UserBoard', {
     recipient: {
@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     sender: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     message: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
   });
 };

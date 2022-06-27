@@ -9,6 +9,8 @@ module.exports = async (req, res, next) => {
   } else {
     // get rid of 'Basic '
     let authStr = req.headers.authorization.split(' ')[1];
+    console.log(authStr);
+    // let encodedAuthStr = base64.encode(authStr);
     let decodedAuthStr = base64.decode(authStr);
     let [username, password] = decodedAuthStr.split(':');
 
